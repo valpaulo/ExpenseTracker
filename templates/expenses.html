@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='expenses.css') }}">
+    <title>Expenses Table</title>
+</head>
+
+<body>
+
+    <div class="expenses-page">
+        <a href="/logout" class="logout-button" onclick="return confirmLogout()">Logout</a>
+
+        <script>
+            function confirmLogout() {
+                return confirm("Are you sure you want to log out?");
+            }
+        </script>
+
+        <h2>Expenses Table</h2>
+
+        <form method="post" action="{{ url_for('expenses') }}">
+            <input type="text" name="amount" placeholder="Amount" required>
+            <input type="text" name="description" placeholder="Description" required>
+            <input type="date" name="expense_date" required>
+            <input type="text" name="notes" placeholder="Notes">
+            <input type="hidden" name="action" value="new">
+
+            <input type="hidden" name="userid" value="{{ userid }}">
+            <button type="submit">Add New Expense</button>
+        </form>
+
+        <table class="expenses-table">
+            <thead>
+                <tr>
+
+                    <th>Amount</th>
+                    <th>Description</th>
+                    <th>Expense Date</th>
+                    <th>Notes</th>
+                    <th>Created At</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for expense in expenses %}
+                <tr>
+                    <td>{{ expense[2] }}</td>
+                    <td>{{ expense[3] }}</td>
+                    <td>{{ expense[4] }}</td>
+                    <td>{{ expense[5] }}</td>
+                    <td>{{ expense[6] }}</td>
+
+                    <td class="action-buttons">
+                        <button type="button" onclick="editExpense('{{ expense[1] }}', '{{ expense[2] }}', '{{ expense[3] }}', '{{ expense[4] }}', '{{ expense[5] }}', '{{ expense[7] }}')">Edit</button>
+                        <button type="button" onclick="deleteExpense('{{ expense[1] }}')">Delete</button>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <!-- Hidden form for editing and deletion-->
+        <form id="editForm" method="post" action="{{ url_for('edit_expense') }}" style="display: none;">
+            <input type="text" name="amount" id="editAmount" required>
+            <input type="text" name="description" id="editDescription" required>
+            <input type="date" name="expense_date" id="editExpenseDate" required>
+            <input type="text" name="notes" id="editNotes">
+            <input type="hidden" name="expense_id" id="editExpenseId">
+            <button type="button" onclick="submitEditForm()" id="editSubmit" >Edit Expense</button>
+        </form>
+
+        <script>
+            function editExpense(expense_id, amount, description, expense_date, notes, userid) {
+                document.getElementById('editExpenseId').value = expense_id;
+                document.getElementById('editAmount').value = amount;
+                document.getElementById('editDescription').value = description;
+                document.getElementById('editExpenseDate').value = expense_date;
+                document.getElementById('editNotes').value = notes;
+                document.getElementById('editForm').style.display = 'block';
+            }
+
+             function submitEditForm() {
+                document.getElementById('editForm').submit();
+            }
+
+            function deleteExpense(expense_id) {
+                if (confirm('Are you sure you want to delete this expense?')) {
+                    // Set the action to delete and submit the form
+                    document.getElementById('editExpenseId').value = expense_id;
+                    document.getElementById('editForm').action = '{{ url_for('delete_expense') }}';
+                    document.getElementById('editForm').submit();
+                }
+            }
+        </script>
+    </div>
+</body>
+
+</html>

@@ -87,6 +87,6 @@ The application assumes the following database schema:
 
 Feel free to contribute to the development of this Flask Expense Tracker by opening issues or submitting pull requests. Your feedback and enhancements are highly appreciated.
 
-For any questions or issues, please open an [issue](https://github.com/https://github.com/valpaulo/ExpenseTracker/issues).
+For any questions or issues, please open an [issue](https://github.com/valpaulo/ExpenseTracker/issues).
 
 Happy expense tracking!
